@@ -1,7 +1,8 @@
+// //----- GET ---------
 const caixa = document.querySelector('.maravilhosas__box');
 
-fetch('https://theblackwomanhistory.firebaseio.com/.json')
-.then(function(response){
+fetch('http://localhost:5001/maravilhosas')
+.then((response) => {
     return response.json();
 })
 
@@ -16,7 +17,7 @@ fetch('https://theblackwomanhistory.firebaseio.com/.json')
         caixa.appendChild(card);
 
         const link = document.createElement('a');
-        link.href = '#!';
+        link.href = '#';
         card.appendChild(link);
 
         //---- image -----
@@ -25,7 +26,7 @@ fetch('https://theblackwomanhistory.firebaseio.com/.json')
         photo.setAttribute('alt', mulheres.title)
 
         if (mulheres.metadata == undefined || mulheres.metadata.image == undefined || mulheres.metadata.image.url == undefined) {
-            photo.setAttribute('src', './img/img-mulher.png')
+            photo.setAttribute('src', './img/img-mulher.png');
         } else {
             photo.setAttribute('src', mulheres.metadata.image.url);
         }
@@ -40,7 +41,34 @@ fetch('https://theblackwomanhistory.firebaseio.com/.json')
     })   
 })
 
-.catch(function(erro){
-    console.log(erro)
+.catch(function(erro) {
+    console.log(erro);
 })
 
+// //----- POST ---------
+const botao = document.getElementById('botao')
+botao.addEventListener('click', (evento) => {
+    evento.preventDefault();
+
+    const nomePost = document.querySelector('.nome').value;
+    const pictureUrl = document.querySelector('.picture').value;
+  
+fetch('http://localhost:5001/maravilhosas', {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        'title': nomePost,
+        'metadata':{
+           'image':{
+             'url': pictureUrl
+            },
+        }
+    })
+})
+.then((res) => res.json())
+.then((data) =>  console.log(data))
+.catch((err)=>console.log(err))
+})
