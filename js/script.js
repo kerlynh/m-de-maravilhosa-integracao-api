@@ -1,4 +1,4 @@
-// //----- GET ---------
+//----- GET ---------
 const caixa = document.querySelector('.maravilhosas__box');
 
 fetch('http://localhost:5001/maravilhosas')
@@ -37,7 +37,35 @@ fetch('http://localhost:5001/maravilhosas')
         const name = document.createElement('p');
         name.textContent = mulheres.title;
         card.appendChild(name);
-        
+
+        //----- GET ---------
+        const buttonDel = document.createElement('button');
+        buttonDel.setAttribute('data-id', mulheres.id);
+        buttonDel.textContent = 'REMOVE';
+        card.appendChild(buttonDel);
+
+            buttonDel.addEventListener('click', () => {
+                const thisCard = buttonDel.parentElement;
+                const cardPai = thisCard.parentElement;
+
+                fetch(`http://localhost:5001/maravilhosas/${mulheres.id}`,{
+                    method: 'DELETE',
+                    head:{
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'id': buttonDel.getAttribute('data-id'),
+                    })
+                })
+
+                .then(() => {
+                    cardPai.removeChild(thisCard);
+                })
+                .catch((erro) => {
+                    console.log(erro)
+                })
+            })
     })   
 })
 
